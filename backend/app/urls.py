@@ -4,7 +4,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", views.fish_list, name="index"),
+    path("<int:fish_detail>/", views.fish_detail, name="fish_detail"),
 ]
 
 # Serve media files during development

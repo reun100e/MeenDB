@@ -1,19 +1,26 @@
-<h1>{{ fish.common_name }} ({{ fish.scientific_name }})</h1>
-<p>{{ fish.description }}</p>
+<!DOCTYPE html>
+<html lang="en">
 
-<h2>Local Names</h2>
-<ul>
-    {% for local_name in fish.local_names.all %}
-        <li>{{ local_name.local_name }} - {{ local_name.description }}</li>
-    {% endfor %}
-</ul>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish List</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
 
-<h2>Photos</h2>
-<ul>
-    {% for photo in fish.photos.all %}
+<body>
+    <h1>List of Fishes</h1>
+
+    <ul>
+        {% for fish in fishes %}
         <li>
-            <img src="{{ photo.image.url }}" alt="{{ photo.description }}">
-            <p>{{ photo.description }}</p>
+            <a href="{% url 'fish_detail' fish.id %}">
+                {{ fish.common_name }} ({{ fish.scientific_name }})
+            </a>
         </li>
-    {% endfor %}
-</ul>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html>
