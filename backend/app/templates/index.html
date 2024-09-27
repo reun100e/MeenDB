@@ -1,0 +1,19 @@
+<h1>{{ fish.common_name }} ({{ fish.scientific_name }})</h1>
+<p>{{ fish.description }}</p>
+
+<h2>Local Names</h2>
+<ul>
+    {% for local_name in fish.local_names.all %}
+        <li>{{ local_name.local_name }} - {{ local_name.description }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Photos</h2>
+<ul>
+    {% for photo in fish.photos.all %}
+        <li>
+            <img src="{{ photo.image.url }}" alt="{{ photo.description }}">
+            <p>{{ photo.description }}</p>
+        </li>
+    {% endfor %}
+</ul>
