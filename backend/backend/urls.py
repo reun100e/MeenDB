@@ -21,6 +21,8 @@ from django.urls import path, include
 from app import views
 from rest_framework import routers
 
+from app.views import RegisterView, LogoutView
+
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -34,10 +36,12 @@ urlpatterns = [
     path("api/v1/", include("app.urls")),
     path("admin/", admin.site.urls),
 
-    # JWT authentication endpoints
-    path("auth/jwt/create/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("auth/jwt/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # User authentication endpoints
+    path("api/register/", RegisterView.as_view(), name="register"),
+    path("api/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/logout/", LogoutView.as_view(), name="logout"),
 
-    #Dev only
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    # Dev only
+    # path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
