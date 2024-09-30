@@ -9,6 +9,8 @@ Pillow = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 django-allauth = "*"
+django-cors-headers = "*"
+drf-social-oauth2 = "*"
 
 [dev-packages]
 
