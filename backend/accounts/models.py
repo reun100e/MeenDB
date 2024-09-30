@@ -29,6 +29,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(blank=True, default="", unique=True)
     name = models.CharField(max_length=255, blank=True, default="")
 
+    age = models.PositiveIntegerField(blank=True, null=True)
+    college = models.CharField(max_length=255, blank=True, null=True)
+    degree = models.CharField(max_length=255, blank=True, null=True)
+    profile_completed = models.BooleanField(default=False)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)

@@ -32,32 +32,46 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "accounts",
-    # other apps
-    "django.contrib.sites",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",  # Google provider
     "allauth.socialaccount.providers.facebook",  # Facebook provider
+    # other apps
+    "django.contrib.auth",
+    "django.contrib.sites",  # Required by allauth
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "accounts",
 ]
 
 SITE_ID = 1  # Required for django-allauth
 
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",  # Default authentication
+    "allauth.account.auth_backends.AuthenticationBackend",  # Allauth authentication
+)
 
 LOGIN_REDIRECT_URL = "/"  # Redirect after successful login
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+
+# django-allauth registraion settings
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_RATE_LIMITS = 5
+
+# or any other page
+ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login/"
+
+# redirects to profile page if not configured.
+LOGIN_REDIRECT_URL = "/accounts/email/"
+
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -75,6 +89,8 @@ SOCIALACCOUNT_PROVIDERS = {
 AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
+    "accounts.middleware.ProfileCompletionMiddleware",  # Add this after authentication
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
