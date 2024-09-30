@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ps0@k!$2&%r)5byingfwbnu1c071-!cy@=fc0a=wovpc*@j%ld"
+SECRET_KEY = "django-insecure-jfag2(%@f5hwbu180de=@m@@8#tb4^a*1@xrcdk$j3v2-6g)2e"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,14 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "django.contrib.admin",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",  # Google provider
-    "allauth.socialaccount.providers.facebook",  # Facebook provider
-    # other apps
     "django.contrib.auth",
-    "django.contrib.sites",  # Required by allauth
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -47,50 +40,7 @@ INSTALLED_APPS = [
     "accounts",
 ]
 
-SITE_ID = 1  # Required for django-allauth
-
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",  # Default authentication
-    "allauth.account.auth_backends.AuthenticationBackend",  # Allauth authentication
-)
-
-LOGIN_REDIRECT_URL = "/"  # Redirect after successful login
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-
-
-# django-allauth registraion settings
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_RATE_LIMITS = 5
-
-# or any other page
-ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login/"
-
-# redirects to profile page if not configured.
-LOGIN_REDIRECT_URL = "/accounts/email/"
-
-
-SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "SCOPE": ["profile", "email"],
-        "AUTH_PARAMS": {"access_type": "online"},
-    },
-    "facebook": {
-        "METHOD": "oauth2",
-        "SCOPE": ["email"],
-        "FIELDS": ["email", "name"],
-    },
-}
-
-
-AUTH_USER_MODEL = "accounts.User"
-
 MIDDLEWARE = [
-    "accounts.middleware.ProfileCompletionMiddleware",  # Add this after authentication
-    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -99,7 +49,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 ROOT_URLCONF = "backend.urls"
 
