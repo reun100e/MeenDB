@@ -47,6 +47,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "api.middleware.CustomExceptionHandler",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -157,3 +158,30 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SOCIALACCOUNT_STORE_TOKENS = True
+
+# backend/settings.py
+import os
+from django.utils.log import configure_logging
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+        },
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "logs/django.log"),
+        },
+    },
+    "loggers": {
+        "myapp": {
+            "handlers": ["console", "file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
