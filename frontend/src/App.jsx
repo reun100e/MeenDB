@@ -5,6 +5,7 @@ import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import AuthPage from "./pages/AuthPage";
 import { useAuthentication } from "./auth";
+import RedirectGoogleAuth from "./components/GoogleRedirectHandler";
 
 function App() {
   const { isAuthorized } = useAuthentication();
@@ -28,6 +29,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          <Route path="/login/callback" element={<RedirectGoogleAuth />} />
           <Route path="/login" element={<ProtectedLogin />} />
           <Route path="/register" element={<ProtectedRegister />} />
           <Route path="/" element={<Home />} />
