@@ -50,6 +50,12 @@
   text-decoration: none; /* Remove underline */
 }
 
+.navbar-username {
+  margin-right: 20px;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
 .navbar-menu li {
   position: relative;
 }

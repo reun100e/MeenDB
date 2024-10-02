@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <header className="header">
-      <img src={img} alt="Background woman" className="header-bg" />
+      <img src={img} alt="Image of fish" className="header-bg" />
       <div className="header-content">
-        <h1>ചാള or മത്തി?</h1>
-        <h3>MeenDB has the answer</h3>
+        <h1>ചാള or മത്തി ?</h1>
+        <h2>MeenDB has the answer</h2>
         <Link to="/fish">
           {" "}
           <button>Explore MeenDB</button>
