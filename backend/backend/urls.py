@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from api.views import *
@@ -13,5 +15,8 @@ urlpatterns = [
     path("callback/", google_login_callback, name="callback"),
     path("api/auth/user/", UserDetailView.as_view(), name="user_detail"),
     path("api/google/validate_token/", validate_google_token, name="validate_token"),
-    path("api/fish/", include("fish.urls")),
+    path("api/", include("fish.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

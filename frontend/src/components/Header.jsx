@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/Header.css";
 import img from "../assets/header-img.png";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -9,7 +10,10 @@ const Header = () => {
       <div className="header-content">
         <h1>ചാള or മത്തി?</h1>
         <h3>MeenDB has the answer</h3>
-        <button>Explore MeenDB</button>
+        <Link to="/fish">
+          {" "}
+          <button>Explore MeenDB</button>
+        </Link>
       </div>
     </header>
   );

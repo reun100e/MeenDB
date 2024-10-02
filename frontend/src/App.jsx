@@ -7,6 +7,11 @@ import AuthPage from "./pages/AuthPage";
 import { useAuthentication } from "./auth";
 import RedirectGoogleAuth from "./components/GoogleRedirectHandler";
 
+import FishList from "./components/FishList";
+import FishForm from "./components/FishForm";
+import FishPhotoList from "./components/FishPhotoList";
+import LocalNameList from "./components/LocalNameList";
+
 function App() {
   const { isAuthorized } = useAuthentication();
   const ProtectedLogin = () => {
@@ -33,6 +38,14 @@ function App() {
           <Route path="/login" element={<ProtectedLogin />} />
           <Route path="/register" element={<ProtectedRegister />} />
           <Route path="/" element={<Home />} />
+
+          <Route path="/fish" element={<FishList />} />
+          <Route path="/add-fish" element={<FishForm />} />
+          <Route path="/edit-fish/:id" element={<FishForm />} />
+          <Route path="/local-names" element={<LocalNameList />} />
+          <Route path="/photos" element={<FishPhotoList />} />
+
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

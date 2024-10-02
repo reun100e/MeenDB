@@ -1,8 +1,12 @@
-from django.urls import path
-from .views import FishListCreateView, LocalNameListCreateView, FishPhotoListCreateView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import FishViewSet, LocalNameViewSet, FishPhotoViewSet
+
+router = DefaultRouter()
+router.register(r"fish", FishViewSet)
+router.register(r"local-name", LocalNameViewSet)
+router.register(r"fish-photos", FishPhotoViewSet)
 
 urlpatterns = [
-    path('', FishListCreateView.as_view(), name='fish_list_create'),
-    path('local-names/', LocalNameListCreateView.as_view(), name='localname_list_create'),
-    path('photos/', FishPhotoListCreateView.as_view(), name='fishphoto_list_create'),
+    path("", include(router.urls)),
 ]
