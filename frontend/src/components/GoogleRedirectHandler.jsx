@@ -27,7 +27,7 @@ function RedirectGoogleAuth() {
         })
         .catch((error) => {
           console.error(
-            "Error verfiying token:",
+            "Error verifying token:",
             error.response ? error.response.data : error.message
           );
           navigate("/login");
