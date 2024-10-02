@@ -2,7 +2,9 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from rest_framework import generics
 from .serializers import UserSerializer
+from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from allauth.socialaccount.models import SocialToken, SocialAccount
 from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -72,3 +74,17 @@ def validate_google_token(request):
         except json.JSONDecodeError:
             return JsonResponse({"detail": "Invalid JSON."}, status=400)
     return JsonResponse({"detail": "Method not allowed."}, status=405)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_active_user(request):
+    user = request.user
+    return Response(
+        {
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+        }
+    )

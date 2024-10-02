@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import "../styles/Navbar.css";
 import { useAuthentication } from "../auth";
+import api from "../api";
 
 function Navbar() {
   const { isAuthorized, logout } = useAuthentication();
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    if (isAuthorized) {
+      fetchActiveUser();
+    }
+  }, [isAuthorized]);
+
+  const fetchActiveUser = async () => {
+    try {
+      const response = await api.get("api/active-user/");
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error("Error fetching active user info", error);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -29,11 +46,16 @@ function Navbar() {
       </ul>
       <ul className="navbar-menu-right">
         {isAuthorized ? (
-          <li>
-            <Link onClick={handleLogout} to="/logout" className="button-link">
-              Logout
-            </Link>
-          </li>
+          <>
+            <li className="navbar-username">
+              <span>Welcome, {username}</span>
+            </li>
+            <li>
+              <Link onClick={handleLogout} to="/logout" className="button-link">
+                Logout
+              </Link>
+            </li>
+          </>
         ) : (
           <>
             <li>
