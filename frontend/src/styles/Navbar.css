@@ -1,4 +1,7 @@
-/* Navbar.css */
+.sidebar * {
+  display: none;
+}
+
 .navbar {
   display: flex;
   align-items: center;
@@ -83,15 +86,61 @@
   color: var(--color-text-inverted);
 }
 
-@media (max-width: 768px) {
-  .navbar-menu-left,
-  .navbar-menu-right {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
+/*.......sidebar sliding.......*/
 
-  .navbar-menu-right {
-    margin-left: 0;
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: flex;
+}
+
+.slideIn {
+  animation-name: slideIn;
+  animation-duration: 0.5s;
+}
+
+.slideOut {
+  animation-name: slideOut;
+  animation-duration: 0.5s;
+}
+
+/* Small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .navbar {
+    display: none;
+  }
+  .sidebar * {
+    display: flex;
+  }
+  .sidebar {
+    flex-direction: column;
+    background-color: var(--color-surface);
+    height: 100vh;
+    width: 50vw;
+    position: absolute;
+    z-index: 100;
+    justify-content: flex-start;
+    align-items: start;
+  }
+  .sidebar-logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .sidebar-logo {
+    display: cover;
+    width: 10rem;
+  }
+  .sidebar-top {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+  }
+  .sidebar-bottom {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
   }
 }
