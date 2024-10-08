@@ -11,6 +11,7 @@ import FishList from "./components/FishList";
 import FishForm from "./components/FishForm";
 import FishPhotoList from "./components/FishPhotoList";
 import LocalNameList from "./components/LocalNameList";
+import LocalNameForm from "./components/LocalNameForm";
 
 function App() {
   const { isAuthorized } = useAuthentication();
@@ -43,8 +44,9 @@ function App() {
           <Route path="/add-fish" element={<FishForm />} />
           <Route path="/edit-fish/:id" element={<FishForm />} />
           <Route path="/local-names" element={<LocalNameList />} />
+          <Route path="/add-local-name" element={<LocalNameForm />} />
+          <Route path="/edit-local-name/:id" element={<LocalNameForm />} />
           <Route path="/photos" element={<FishPhotoList />} />
-
 
           <Route path="*" element={<NotFound />} />
         </Routes>
