@@ -36,7 +36,7 @@ function FishList() {
       <ul>
         {fishList.map((fish) => (
           <li key={fish.id}>
-            {fish.common_name} ({fish.scientific_name})
+            {fish.common_name} ({fish.scientific_name}) - {fish.description}
             <Link to={`/edit-fish/${fish.id}`}>Edit</Link>
             <button onClick={() => handleDelete(fish.id)}>Delete</button>
           </li>
