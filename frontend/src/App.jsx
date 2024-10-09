@@ -13,6 +13,8 @@ import FishPhotoList from "./components/FishPhotoList";
 import LocalNameList from "./components/LocalNameList";
 import LocalNameForm from "./components/LocalNameForm";
 
+import FishRoutes from "./routes/FishRoutes";
+
 function App() {
   const { isAuthorized } = useAuthentication();
   const ProtectedLogin = () => {
@@ -22,6 +24,7 @@ function App() {
       <AuthPage initialMethod="login" />
     );
   };
+
   const ProtectedRegister = () => {
     return isAuthorized ? (
       <Navigate to="/" />
@@ -40,13 +43,15 @@ function App() {
           <Route path="/register" element={<ProtectedRegister />} />
           <Route path="/" element={<Home />} />
 
-          <Route path="/fish" element={<FishList />} />
-          <Route path="/add-fish" element={<FishForm />} />
-          <Route path="/edit-fish/:id" element={<FishForm />} />
-          <Route path="/local-names" element={<LocalNameList />} />
-          <Route path="/add-local-name" element={<LocalNameForm />} />
-          <Route path="/edit-local-name/:id" element={<LocalNameForm />} />
-          <Route path="/photos" element={<FishPhotoList />} />
+          <Route path="/" element={<FishRoutes />}>
+            <Route path="fish" element={<FishList />} />
+            <Route path="add-fish" element={<FishForm />} />
+            <Route path="edit-fish/:id" element={<FishForm />} />
+            <Route path="local-names" element={<LocalNameList />} />
+            <Route path="add-local-name" element={<LocalNameForm />} />
+            <Route path="edit-local-name/:id" element={<LocalNameForm />} />
+            <Route path="photos" element={<FishPhotoList />} />
+          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Routes>

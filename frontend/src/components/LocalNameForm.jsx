@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api";
+import { FishContext } from "./FishContext";
 
 const LocalNameForm = () => {
-  const [fishList, setFishList] = useState([]);
+  const { fishList } = useContext(FishContext); // Access the fish list from context
   const [localNameData, setLocalNameData] = useState({
     fish: "",
     local_name: "",
@@ -16,21 +17,10 @@ const LocalNameForm = () => {
   const { id } = useParams(); // The id from the URL, used for editing
 
   useEffect(() => {
-    fetchFishList(); // Fetch the list of fish for the dropdown
     if (id) {
       fetchLocalNameData(); // Fetch the local name data if in edit mode
     }
   }, [id]);
-
-  // Fetch fish list for the dropdown
-  const fetchFishList = async () => {
-    try {
-      const res = await api.get("api/fish/");
-      setFishList(res.data);
-    } catch (error) {
-      console.error("Error fetching fish list:", error);
-    }
-  };
 
   // Fetch the specific local name data to edit
   const fetchLocalNameData = async () => {
@@ -47,15 +37,12 @@ const LocalNameForm = () => {
     e.preventDefault();
     try {
       if (id) {
-        // Update existing LocalName
         await api.put(`/api/local-name/${id}/`, localNameData);
         console.log("Local name updated!");
       } else {
-        // Create a new LocalName
         await api.post("/api/local-name/", localNameData);
         console.log("Local name added!");
       }
-      // Reset form after submission
       setLocalNameData({
         fish: "",
         local_name: "",
@@ -70,12 +57,19 @@ const LocalNameForm = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setLocalNameData({
+      ...localNameData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   // Handle delete
   const handleDelete = async () => {
     if (id) {
       if (window.confirm("Are you sure you want to delete this local name?")) {
         try {
-          await api.delete(`/api/local-name/${id}/`);
+          await api.delete("/api/local-name/${id}/");
           console.log("Local name deleted!");
           navigate("/local-names");
         } catch (error) {
@@ -83,14 +77,6 @@ const LocalNameForm = () => {
         }
       }
     }
-  };
-
-  // Handle input changes
-  const handleChange = (e) => {
-    setLocalNameData({
-      ...localNameData,
-      [e.target.name]: e.target.value,
-    });
   };
 
   return (
