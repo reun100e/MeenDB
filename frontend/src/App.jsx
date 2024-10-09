@@ -17,20 +17,13 @@ import FishRoutes from "./routes/FishRoutes";
 
 function App() {
   const { isAuthorized } = useAuthentication();
+
   const ProtectedLogin = () => {
-    return isAuthorized ? (
-      <Navigate to="/" />
-    ) : (
-      <AuthPage initialMethod="login" />
-    );
+    return isAuthorized ? <Navigate to="/" /> : <AuthPage initialMethod="login" />;
   };
 
   const ProtectedRegister = () => {
-    return isAuthorized ? (
-      <Navigate to="/" />
-    ) : (
-      <AuthPage initialMethod="register" />
-    );
+    return isAuthorized ? <Navigate to="/" /> : <AuthPage initialMethod="register" />;
   };
 
   return (
@@ -38,11 +31,15 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          {/* Authentication-related routes */}
           <Route path="/login/callback" element={<RedirectGoogleAuth />} />
           <Route path="/login" element={<ProtectedLogin />} />
           <Route path="/register" element={<ProtectedRegister />} />
+
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
 
+          {/* FishProvider wraps all fish-related routes */}
           <Route path="/" element={<FishRoutes />}>
             <Route path="fish" element={<FishList />} />
             <Route path="add-fish" element={<FishForm />} />
@@ -53,6 +50,7 @@ function App() {
             <Route path="photos" element={<FishPhotoList />} />
           </Route>
 
+          {/* Catch-all route for 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
