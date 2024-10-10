@@ -1,38 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../api";
+import { useFish } from "./contexts/FishContext";
 
 function FishForm() {
+  const { fishData, fetchFishData, createFish, updateFish } = useFish(); // Using context functions
   const [formData, setFormData] = useState({
     common_name: "",
     scientific_name: "",
     description: "",
   });
+
   const navigate = useNavigate();
   const { id } = useParams(); // For editing, id will be available
 
+  // Fetch fish data if editing
   useEffect(() => {
     if (id) {
-      fetchFishData();
+      const loadFishData = async () => {
+        const data = await fetchFishData(id);
+        if (data) {
+          setFormData({
+            common_name: data.common_name || "",
+            scientific_name: data.scientific_name || "",
+            description: data.description || "",
+          });
+        }
+      };
+      loadFishData();
     }
-  }, [id]);
-
-  const fetchFishData = async () => {
-    try {
-      const res = await api.get(`api/fish/${id}/`);
-      setFormData(res.data);
-    } catch (error) {
-      console.error("Error fetching fish data:", error);
-    }
-  };
+  }, [id, fetchFishData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (id) {
-        await api.put(`api/fish/${id}/`, formData); // Update existing
+        await updateFish(id, formData); // Update existing fish
       } else {
-        await api.post("api/fish/", formData); // Create new
+        await createFish(formData); // Create new fish
       }
       navigate("/fish"); // Redirect to fish list
     } catch (error) {

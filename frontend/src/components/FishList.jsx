@@ -1,19 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import api from "../api";
+import React from "react";
 import { Link } from "react-router-dom";
-import { FishContext } from "./FishContext";
+import { useFish } from "./contexts/FishContext";
 
 function FishList() {
-  const { fishList } = useContext(FishContext);
+  const { fishList, deleteFish } = useFish(); // Using context functions
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this fish?")) {
-      try {
-        await api.delete(`api/fish/${id}/`);
-        fetchFish(); // Refresh list after deletion
-      } catch (error) {
-        console.error("Error deleting fish:", error);
-      }
+      deleteFish(id); // Delete fish using context
     }
   };
 

@@ -1,11 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import api from "../api";
-import { FishContext } from "./FishContext";
+import { useLocalName } from "./contexts/LocalNameContext";
+import { useFish } from "./contexts/FishContext";
 
 const LocalNameForm = () => {
-  const { fishList } = useContext(FishContext); // Access the fish list from context
-  const [localNameData, setLocalNameData] = useState({
+  const { fishList } = useFish(); // Access fish list from context
+  const {
+    fetchLocalNameData,
+    saveLocalNameData,
+    deleteLocalName,
+    localNameData,
+  } = useLocalName(); // Use local name context
+  const [formData, setFormData] = useState({
     fish: "",
     local_name: "",
     region: "",
@@ -14,69 +20,41 @@ const LocalNameForm = () => {
     growth_stage: "",
   });
   const navigate = useNavigate();
-  const { id } = useParams(); // The id from the URL, used for editing
+  const { id } = useParams(); // ID for editing
 
   useEffect(() => {
     if (id) {
-      fetchLocalNameData(); // Fetch the local name data if in edit mode
+      fetchLocalNameData(id); // Fetch local name data if editing
     }
-  }, [id]);
+  }, [id, fetchLocalNameData]);
 
-  // Fetch the specific local name data to edit
-  const fetchLocalNameData = async () => {
-    try {
-      const res = await api.get(`api/local-name/${id}/`); // Fetch specific local name by id
-      setLocalNameData(res.data);
-    } catch (error) {
-      console.error("Error fetching local name data:", error);
+  useEffect(() => {
+    if (id && localNameData) {
+      setFormData(localNameData); // Update formData when localNameData changes
     }
-  };
+  }, [localNameData]);
 
-  // Handle form submission for both create and update
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (id) {
-        await api.put(`/api/local-name/${id}/`, localNameData);
-        console.log("Local name updated!");
-      } else {
-        await api.post("/api/local-name/", localNameData);
-        console.log("Local name added!");
-      }
-      setLocalNameData({
-        fish: "",
-        local_name: "",
-        region: "",
-        size: "",
-        color_variation: "",
-        growth_stage: "",
-      });
-      navigate("/local-names");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
-
-  const handleChange = (e) => {
-    setLocalNameData({
-      ...localNameData,
-      [e.target.name]: e.target.value,
-    });
+    await saveLocalNameData(formData, id);
+    navigate("/local-names");
   };
 
   // Handle delete
   const handleDelete = async () => {
-    if (id) {
-      if (window.confirm("Are you sure you want to delete this local name?")) {
-        try {
-          await api.delete("/api/local-name/${id}/");
-          console.log("Local name deleted!");
-          navigate("/local-names");
-        } catch (error) {
-          console.error("Error deleting local name:", error);
-        }
-      }
+    if (window.confirm("Are you sure you want to delete this local name?")) {
+      await deleteLocalName(id);
+      navigate("/local-names");
     }
+  };
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
@@ -84,7 +62,7 @@ const LocalNameForm = () => {
       <h3>{id ? "Update" : "Add"} Local Name</h3>
 
       <label>Fish</label>
-      <select name="fish" value={localNameData.fish} onChange={handleChange}>
+      <select name="fish" value={formData.fish} onChange={handleChange}>
         <option value="">Select Fish</option>
         {fishList.map((fish) => (
           <option key={fish.id} value={fish.id}>
@@ -97,7 +75,7 @@ const LocalNameForm = () => {
       <input
         type="text"
         name="local_name"
-        value={localNameData.local_name}
+        value={formData.local_name}
         onChange={handleChange}
         required
       />
@@ -106,7 +84,7 @@ const LocalNameForm = () => {
       <input
         type="text"
         name="region"
-        value={localNameData.region}
+        value={formData.region}
         onChange={handleChange}
         required
       />
@@ -115,7 +93,7 @@ const LocalNameForm = () => {
       <input
         type="text"
         name="size"
-        value={localNameData.size}
+        value={formData.size}
         onChange={handleChange}
       />
 
@@ -123,7 +101,7 @@ const LocalNameForm = () => {
       <input
         type="text"
         name="color_variation"
-        value={localNameData.color_variation}
+        value={formData.color_variation}
         onChange={handleChange}
       />
 
@@ -131,7 +109,7 @@ const LocalNameForm = () => {
       <input
         type="text"
         name="growth_stage"
-        value={localNameData.growth_stage}
+        value={formData.growth_stage}
         onChange={handleChange}
       />
 

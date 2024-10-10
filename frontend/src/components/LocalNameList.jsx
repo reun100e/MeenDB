@@ -1,30 +1,23 @@
-import React, { useState, useEffect } from "react";
-import api from "../api";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLocalName } from "./contexts/LocalNameContext";
 
 function LocalNameList() {
-  const [localNames, setLocalNames] = useState([]);
+  const { localNameList, fetchLocalNames, deleteLocalName } = useLocalName();
 
   useEffect(() => {
     fetchLocalNames();
-  }, []);
-
-  const fetchLocalNames = async () => {
-    try {
-      const res = await api.get("api/local-name/");
-      setLocalNames(res.data);
-    } catch (error) {
-      console.error("Error fetching local names data:", error);
-    }
-  };
+  }, []); // Remove fetchLocalNames from dependency array if it's stable
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this local name?")) {
       try {
-        await api.delete(`api/local-name/${id}/`);
-        fetchLocalNames(); // Refresh list after deletion
+        await deleteLocalName(id);
+        alert("Local name deleted successfully");
+        fetchLocalNames();
       } catch (error) {
-        console.error("Error deleting local name:", error);
+        alert("Failed to delete local name. Please try again.");
+        console.error("Delete error:", error);
       }
     }
   };
@@ -34,11 +27,16 @@ function LocalNameList() {
       <h2>Local Name List</h2>
       <Link to="/add-local-name">Add Local Name</Link>
       <ul>
-        {localNames.map((localName) => (
+        {localNameList.map((localName) => (
           <li key={localName.id}>
-            Fish name ({localName.local_name}) - {localName.region}
+            Fish name ({localName.localName}) - {localName.region}
             <Link to={`/edit-local-name/${localName.id}`}>Edit</Link>
-            <button onClick={() => handleDelete(localName.id)}>Delete</button>
+            <button
+              onClick={() => handleDelete(localName.id)}
+              aria-label={`Delete ${localName.localName}`}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
