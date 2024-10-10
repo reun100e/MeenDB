@@ -1,10 +1,13 @@
 import { Outlet } from "react-router-dom";
-import { FishProvider } from "../components/FishContext";
+import { FishProvider } from "../components/contexts/FishContext";
+import { LocalNameProvider } from "../components/contexts/LocalNameContext";
 
 function FishRoutes() {
   return (
     <FishProvider>
-      <Outlet /> {/* Renders child routes */}
+      <LocalNameProvider>
+        <Outlet /> {/* Renders child routes */}
+      </LocalNameProvider>
     </FishProvider>
   );
 }
