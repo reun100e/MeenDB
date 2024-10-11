@@ -7,6 +7,7 @@ import AuthPage from "./pages/AuthPage";
 import { useAuthentication } from "./auth";
 import RedirectGoogleAuth from "./components/GoogleRedirectHandler";
 
+import Explore from "./pages/Explore";
 import FishList from "./components/FishList";
 import FishForm from "./components/FishForm";
 import FishPhotoList from "./components/FishPhotoList";
@@ -41,6 +42,7 @@ function App() {
 
           {/* FishProvider wraps all fish-related routes */}
           <Route path="/" element={<FishRoutes />}>
+            <Route path="explore" element={<Explore />} />
             <Route path="fish" element={<FishList />} />
             <Route path="add-fish" element={<FishForm />} />
             <Route path="edit-fish/:id" element={<FishForm />} />

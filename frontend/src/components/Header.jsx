@@ -10,7 +10,7 @@ const Header = () => {
       <div className="header-content">
         <h1>ചാള or മത്തി ?</h1>
         <h2>MeenDB has the answer</h2>
-        <Link to="/fish">
+        <Link to="/explore">
           {" "}
           <button>Explore MeenDB</button>
         </Link>
