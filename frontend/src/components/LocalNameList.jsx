@@ -1,26 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useLocalName } from "./contexts/LocalNameContext";
 
 function LocalNameList() {
-  const { localNameList, fetchLocalNames, deleteLocalName } = useLocalName();
+  const { localNameList, fetchLocalNames, deleteLocalName } = useLocalName(); // Use local name context
 
   useEffect(() => {
     fetchLocalNames();
-  }, []); // Remove fetchLocalNames from dependency array if it's stable
+  }, [fetchLocalNames]);
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this local name?")) {
-      try {
-        await deleteLocalName(id);
-        alert("Local name deleted successfully");
-        fetchLocalNames();
-      } catch (error) {
-        alert("Failed to delete local name. Please try again.");
-        console.error("Delete error:", error);
+  // Handle delete
+  const handleDelete = useCallback(
+    async (id) => {
+      if (window.confirm("Are you sure you want to delete this local name?")) {
+        try {
+          await deleteLocalName(id);
+          alert("Local name deleted successfully");
+        } catch (error) {
+          alert("Failed to delete local name. Please try again.");
+          console.error("Delete error:", error);
+        }
       }
-    }
-  };
+    },
+    [deleteLocalName]
+  );
 
   return (
     <div>
@@ -29,11 +32,11 @@ function LocalNameList() {
       <ul>
         {localNameList.map((localName) => (
           <li key={localName.id}>
-            Fish name ({localName.localName}) - {localName.region}
+            Fish name ({localName.local_name}) - {localName.region}
             <Link to={`/edit-local-name/${localName.id}`}>Edit</Link>
             <button
               onClick={() => handleDelete(localName.id)}
-              aria-label={`Delete ${localName.localName}`}
+              aria-label={`Delete ${localName.local_name}`}
             >
               Delete
             </button>

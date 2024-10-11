@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useFish } from "./contexts/FishContext";
 
 function FishList() {
-  const { fishList, deleteFish } = useFish(); // Using context functions
+  const { fishList, deleteFish } = useFish(); // Access fish list and functions from Fish context
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this fish?")) {
-      deleteFish(id); // Delete fish using context
-    }
-  };
+  // Handle delete
+  const handleDelete = useCallback(
+    async (id) => {
+      if (window.confirm("Are you sure you want to delete this fish?")) {
+        await deleteFish(id); // Delete fish using context
+      }
+    },
+    [deleteFish]
+  );
 
   return (
     <div>

@@ -4,7 +4,7 @@ import { useFish } from "./contexts/FishContext";
 
 function FishForm() {
   // Using context functions
-  const { fishData, fetchFishData, createFish, updateFish, fishList } =
+  const { fetchFishData, createFish, updateFish, fishList, fishCache } =
     useFish();
   const [formData, setFormData] = useState({
     common_name: "",
@@ -16,24 +16,30 @@ function FishForm() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // Fetch fish data if editing
+  // Fetch fish data if editing, or use cached data
   useEffect(() => {
     if (id) {
-      const loadFishData = async () => {
-        const data = await fetchFishData(id);
-        if (data) {
-          const relevantData = {
-            common_name: data.common_name || "",
-            scientific_name: data.scientific_name || "",
-            description: data.description || "",
-          };
-          setFormData(relevantData);
-          setOriginalData(relevantData);
-        }
-      };
-      loadFishData();
+      const cachedFish = fishCache[id]; // Check cache first
+      if (cachedFish) {
+        setFormData(cachedFish);
+        setOriginalData(cachedFish);
+      } else {
+        const loadFishData = async () => {
+          const data = await fetchFishData(id);
+          if (data) {
+            const relevantData = {
+              common_name: data.common_name || "",
+              scientific_name: data.scientific_name || "",
+              description: data.description || "",
+            };
+            setFormData(relevantData);
+            setOriginalData(relevantData);
+          }
+        };
+        loadFishData();
+      }
     }
-  }, [id]);
+  }, [id, fishCache, fetchFishData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,13 +51,12 @@ function FishForm() {
           "scientific_name",
           "description",
         ].some((key) => formData[key] !== originalData[key]);
-
         if (hasChanged) {
           await updateFish(id, formData);
           console.log("Changes detected. Updating fish.");
         } else {
           console.log("No changes detected. Skipping update.");
-          navigate("/fish"); // Redirect without making API call
+          navigate("/fish");
           return;
         }
       } else {
@@ -63,7 +68,7 @@ function FishForm() {
         );
         if (existingFish) {
           console.log("A fish with this common name already exists.");
-          // You might want to show an error message to the user here
+          // Should show an error message to the user that the fish already exists
           return;
         }
         await createFish(formData);
