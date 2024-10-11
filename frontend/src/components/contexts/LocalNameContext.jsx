@@ -18,7 +18,7 @@ export const LocalNameProvider = ({ children }) => {
   const [localNameCache, setLocalNameCache] = useState({});
 
   // Fetch all local names
-  const fetchLocalNames = useCallback(async () => {
+  const fetchCommonNames = useCallback(async () => {
     try {
       const { data } = await api.get("/api/local-name/");
       setLocalNameList(data);
@@ -70,12 +70,12 @@ export const LocalNameProvider = ({ children }) => {
           ...prevCache,
           [data.id]: data,
         }));
-        fetchLocalNames(); // Refresh the list
+        fetchCommonNames(); // Refresh the list
       } catch (error) {
         console.error("Error saving local name data:", error);
       }
     },
-    [fetchLocalNames]
+    [fetchCommonNames]
   );
 
   // Delete local name by ID
@@ -88,19 +88,19 @@ export const LocalNameProvider = ({ children }) => {
           delete newCache[id];
           return newCache;
         });
-        fetchLocalNames(); // Refresh the list
+        fetchCommonNames(); // Refresh the list
       } catch (error) {
         console.error("Error deleting local name:", error);
       }
     },
-    [fetchLocalNames]
+    [fetchCommonNames]
   );
 
   const contextValue = useMemo(
     () => ({
       localNameList,
       localNameCache,
-      fetchLocalNames,
+      fetchCommonNames,
       fetchLocalNameData,
       saveLocalNameData,
       deleteLocalName,
@@ -108,7 +108,7 @@ export const LocalNameProvider = ({ children }) => {
     [
       localNameList,
       localNameCache,
-      fetchLocalNames,
+      fetchCommonNames,
       fetchLocalNameData,
       saveLocalNameData,
       deleteLocalName,
