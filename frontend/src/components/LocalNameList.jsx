@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { useLocalName } from "./contexts/LocalNameContext";
 
 function LocalNameList() {
-  const { localNameList, fetchLocalNames, deleteLocalName } = useLocalName(); // Use local name context
+  const { localNameList, fetchCommonNames, deleteLocalName } = useLocalName(); // Use local name context
 
   useEffect(() => {
-    fetchLocalNames();
-  }, [fetchLocalNames]);
+    fetchCommonNames();
+  }, [fetchCommonNames]);
 
   // Handle delete
   const handleDelete = useCallback(
