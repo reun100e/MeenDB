@@ -105,6 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -123,7 +124,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWS_CREDENTIALS = True
 
+AUTH_USER_MODEL = "fish.CustomUser"
+
 AUTHENTICATION_BACKENDS = (
+    "fish.CustomPermissionBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
