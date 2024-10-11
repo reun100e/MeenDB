@@ -29,7 +29,13 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 class FishViewSet(viewsets.ModelViewSet):
     queryset = Fish.objects.all()
     serializer_class = FishSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+        else:
+            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
