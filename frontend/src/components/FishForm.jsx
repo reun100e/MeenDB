@@ -3,15 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useFish } from "./contexts/FishContext";
 
 function FishForm() {
-  const { fishData, fetchFishData, createFish, updateFish } = useFish(); // Using context functions
+  // Using context functions
+  const { fishData, fetchFishData, createFish, updateFish, fishList } =
+    useFish();
   const [formData, setFormData] = useState({
     common_name: "",
     scientific_name: "",
     description: "",
   });
+  const [originalData, setOriginalData] = useState(null);
 
   const navigate = useNavigate();
-  const { id } = useParams(); // For editing, id will be available
+  const { id } = useParams();
 
   // Fetch fish data if editing
   useEffect(() => {
@@ -19,26 +22,53 @@ function FishForm() {
       const loadFishData = async () => {
         const data = await fetchFishData(id);
         if (data) {
-          setFormData({
+          const relevantData = {
             common_name: data.common_name || "",
             scientific_name: data.scientific_name || "",
             description: data.description || "",
-          });
+          };
+          setFormData(relevantData);
+          setOriginalData(relevantData);
         }
       };
       loadFishData();
     }
-  }, [id, fetchFishData]);
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (id) {
-        await updateFish(id, formData); // Update existing fish
+        // Check if relevant data has changed before updating
+        const hasChanged = [
+          "common_name",
+          "scientific_name",
+          "description",
+        ].some((key) => formData[key] !== originalData[key]);
+
+        if (hasChanged) {
+          await updateFish(id, formData);
+          console.log("Changes detected. Updating fish.");
+        } else {
+          console.log("No changes detected. Skipping update.");
+          navigate("/fish"); // Redirect without making API call
+          return;
+        }
       } else {
-        await createFish(formData); // Create new fish
+        // Check if a fish with the same common name already exists
+        const existingFish = fishList.find(
+          (fish) =>
+            fish.common_name.toLowerCase() ===
+            formData.common_name.toLowerCase()
+        );
+        if (existingFish) {
+          console.log("A fish with this common name already exists.");
+          // You might want to show an error message to the user here
+          return;
+        }
+        await createFish(formData);
       }
-      navigate("/fish"); // Redirect to fish list
+      navigate("/fish");
     } catch (error) {
       console.error("Error saving fish data:", error);
     }
