@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import (
     Fish,
     CommonNames,
@@ -47,27 +48,40 @@ class FishPhotoAdmin(admin.ModelAdmin):
 
 
 @admin.register(CustomUser)
-class CustomUserAdmin(admin.ModelAdmin):
+class CustomUserAdmin(UserAdmin):
     list_display = ("username", "email", "user_type", "is_staff", "is_active")
-    list_filter = ("user_type", "is_staff", "is_active")
+    list_filter = ("user_type", "is_active", "groups")
     search_fields = ("username", "email")
+    ordering = ("username",)
+    filter_horizontal = (
+        "groups",
+        "user_permissions",
+    )
+
     fieldsets = (
-        (None, {"fields": ("username", "email", "password")}),
+        (None, {"fields": ("username", "password")}),
+        ("Personal info", {"fields": ("email",)}),
         (
             "Permissions",
-            {
-                "fields": (
-                    "user_type",
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                )
-            },
+            {"fields": ("user_type", "is_active", "groups", "user_permissions")},
         ),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
+
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("username", "email", "password1", "password2", "user_type"),
+            },
+        ),
+    )
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # editing an existing object
+            return self.readonly_fields + ("user_type",)
+        return self.readonly_fields
 
 
 admin.site.register(CommonNames)
