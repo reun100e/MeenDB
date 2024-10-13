@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
+from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 import json
 import logging
@@ -61,6 +62,12 @@ def google_login_callback(request):
     else:
         print("No Google token found for user", user)
         return redirect(f"http://localhost:5173/login/callback/?error=NoGoogleToken")
+
+
+@csrf_exempt
+def get_csrf_token(request):
+    token = get_token(request)
+    return JsonResponse({"csrfToken": token})
 
 
 @csrf_exempt
