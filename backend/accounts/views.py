@@ -13,9 +13,6 @@ from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 import json
-import logging
-
-logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -45,7 +42,7 @@ def google_login_callback(request):
     social_account = social_accounts.first()
 
     if not social_account:
-        logger.error(f"No social account found for user {user}.")
+        print("No social account for user:", user)
         return redirect("http://localhost:5173/login/callback/?error=NoSocialAccount")
 
     token = SocialToken.objects.filter(
