@@ -152,7 +152,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "backend/static"]
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -185,11 +185,15 @@ LOGGING = {
             "class": "logging.FileHandler",
             "filename": "errors.log",
         },
+        "console": {
+            "level": "INFO",  # (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            "class": "logging.StreamHandler",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
-            "level": "ERROR",
+            "handlers": ["file", "console"],  # Use both file and console handlers
+            "level": "DEBUG",  # Capture all logs
             "propagate": True,
         },
     },
