@@ -13,6 +13,4 @@ urlpatterns = [
     path("api/auth/user/", UserDetailView.as_view(), name="user_detail"),
     path("api/google/validate_token/", validate_google_token, name="validate_token"),
     path("api/active-user/", get_active_user, name="active_user"),
-    path("api/get-csrf-token/", get_csrf_token),
-
 ]
